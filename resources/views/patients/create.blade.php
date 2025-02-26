@@ -19,7 +19,7 @@
             border-radius: 8px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
             width: 350px;
-        }
+        }   
         h1 {
             text-align: center;
             font-size: 20px;

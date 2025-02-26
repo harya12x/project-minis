@@ -53,12 +53,25 @@
 </head>
 <body>
     <div class="container">
-        <h1>Form Pendaftaran Pasien</h1>
-
-        @if(session('success'))
-            <p style="color: green;">{{ session('success') }}</p>
+        @if (session('error'))
+            <div style="background-color: #ffdddd; color: red; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                {{ session('error') }}
+            </div>
         @endif
 
+        @if (session('success'))
+            <div style="background-color: #ddffdd; color: green; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if (session('warning'))
+            <div style="background-color: #fff4cc; color: #856404; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                {{ session('warning') }}
+            </div>
+        @endif
+
+        <h1>Form Pendaftaran Pasien</h1>
         <form action="{{ route('appointments.store') }}" method="POST">
             @csrf
             <label for="patient_name">Nama Pasien:</label>
@@ -76,7 +89,7 @@
             <select name="doctor_id" required>
                 <option value="">Pilih Dokter</option>
                 @foreach($doctors as $doctor)
-                    <option value="{{ $doctor->id }}">{{ $doctor->name }}</option>
+                    <option value="{{ $doctor->doctor_id }}">{{ $doctor->name }}</option>
                 @endforeach
             </select>
 
@@ -84,12 +97,14 @@
             <select name="schedule_id" required>
                 <option value="">Pilih Jadwal</option>
                 @foreach($schedules as $schedule)
-                    <option value="{{ $schedule->id }}">{{ $schedule->start_time }} - {{ $schedule->end_time }}</option>
+                    <option value="{{ $schedule->schedule_id }}">{{ $schedule->start_time }} - {{ $schedule->end_time }}</option>
                 @endforeach
             </select>
 
-            <label for="medic_record">No. Rekam Medis:</label>
-            <input type="text" name="medic_record" required>
+            <label for="medic_record_number">No. Rekam Medis:</label>
+            <input type="text" name="medic_record_number" value="{{ $medicalRecordNumber }}" readonly>
+
+
 
             <button type="submit">Simpan</button>
         </form>

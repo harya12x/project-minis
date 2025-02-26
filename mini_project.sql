@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 24 Feb 2025 pada 14.33
+-- Waktu pembuatan: 26 Feb 2025 pada 14.59
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.1.25
 
@@ -28,7 +28,7 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `doctors` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+  `doctor_id` bigint(20) UNSIGNED NOT NULL,
   `name` varchar(255) NOT NULL,
   `polyclinic_id` bigint(20) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -39,7 +39,7 @@ CREATE TABLE `doctors` (
 -- Dumping data untuk tabel `doctors`
 --
 
-INSERT INTO `doctors` (`id`, `name`, `polyclinic_id`, `created_at`, `updated_at`) VALUES
+INSERT INTO `doctors` (`doctor_id`, `name`, `polyclinic_id`, `created_at`, `updated_at`) VALUES
 (1, 'Harya', 1, '2025-02-24 07:28:34', '2025-02-24 07:28:34');
 
 -- --------------------------------------------------------
@@ -116,15 +116,6 @@ CREATE TABLE `patients` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data untuk tabel `patients`
---
-
-INSERT INTO `patients` (`id`, `medical_record_number`, `nik`, `name`, `address`, `gender`, `birth_date`, `phone`, `created_at`, `updated_at`) VALUES
-(1, '691458', '123', 'Harya', 'Harya', 'Pria', '2025-02-24', 'asd123', '2025-02-24 00:43:22', '2025-02-24 00:43:22'),
-(2, '1740383426', '12345', 'Harya', 'asd', 'Pria', '2025-02-24', '081310653558', '2025-02-24 00:50:26', '2025-02-24 00:50:26'),
-(3, '1740385859', 'asd', '123', 'asd', 'Pria', '2025-02-24', '12312', '2025-02-24 01:30:59', '2025-02-24 01:30:59');
-
 -- --------------------------------------------------------
 
 --
@@ -173,20 +164,13 @@ INSERT INTO `polyclinics` (`id`, `name`, `created_at`, `updated_at`) VALUES
 CREATE TABLE `registrations` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `patient_name` text NOT NULL,
-  `poly_name` text NOT NULL,
-  `doctor_name` text NOT NULL,
-  `schedule` text NOT NULL,
-  `medic_record` text NOT NULL,
+  `polyclinic_id` int(11) NOT NULL,
+  `doctor_id` int(11) NOT NULL,
+  `schedule_id` int(11) NOT NULL,
+  `medic_record_number` text NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data untuk tabel `registrations`
---
-
-INSERT INTO `registrations` (`id`, `patient_name`, `poly_name`, `doctor_name`, `schedule`, `medic_record`, `created_at`, `updated_at`) VALUES
-(1, '1', '0', '0', '00:00:01', '0', '2025-02-24 07:54:01', '2025-02-24 07:54:01');
 
 -- --------------------------------------------------------
 
@@ -208,7 +192,7 @@ CREATE TABLE `schedules` (
 --
 
 INSERT INTO `schedules` (`schedule_id`, `doctor_id`, `start_time`, `end_time`, `created_at`, `updated_at`) VALUES
-(1, 1, '14:00:00', '15:00:00', '2025-02-24 07:53:08', '2025-02-24 07:53:08');
+(1, 1, '13:00:00', '15:00:00', '2025-02-24 07:53:08', '2025-02-24 07:53:08');
 
 -- --------------------------------------------------------
 
@@ -235,7 +219,7 @@ CREATE TABLE `users` (
 -- Indeks untuk tabel `doctors`
 --
 ALTER TABLE `doctors`
-  ADD PRIMARY KEY (`id`),
+  ADD PRIMARY KEY (`doctor_id`),
   ADD KEY `polyclinic_id` (`polyclinic_id`);
 
 --
@@ -283,7 +267,8 @@ ALTER TABLE `polyclinics`
 -- Indeks untuk tabel `registrations`
 --
 ALTER TABLE `registrations`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `polyclinic_id` (`polyclinic_id`,`doctor_id`,`schedule_id`);
 
 --
 -- Indeks untuk tabel `schedules`
@@ -307,7 +292,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT untuk tabel `doctors`
 --
 ALTER TABLE `doctors`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `doctor_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT untuk tabel `failed_jobs`
@@ -325,7 +310,7 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT untuk tabel `patients`
 --
 ALTER TABLE `patients`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT untuk tabel `personal_access_tokens`
@@ -343,7 +328,7 @@ ALTER TABLE `polyclinics`
 -- AUTO_INCREMENT untuk tabel `registrations`
 --
 ALTER TABLE `registrations`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT untuk tabel `schedules`
@@ -356,16 +341,6 @@ ALTER TABLE `schedules`
 --
 ALTER TABLE `users`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
---
-
---
--- Ketidakleluasaan untuk tabel `schedules`
---
-ALTER TABLE `schedules`
-  ADD CONSTRAINT `schedules_doctor_id_foreign` FOREIGN KEY (`doctor_id`) REFERENCES `doctors` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

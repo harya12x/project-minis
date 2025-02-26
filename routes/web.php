@@ -24,4 +24,5 @@ Route::post('/patients/store', [PatientController::class, 'store'])->name('patie
 
 
 Route::get('/appointments/create', [AppointmentController::class, 'create'])->name('appointments.create');
+Route::get('/appointments/success', [AppointmentController::class, 'successPage'])->name('appointments.successPage');
 Route::post('/appointments/store', [AppointmentController::class, 'store'])->name('appointments.store');
