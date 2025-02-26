@@ -54,10 +54,17 @@
 <body>
     <div class="container">
         <h1>Form Pendaftaran Pasien</h1>
+        
         <form action="{{ route('patients.store') }}" method="POST">
             @csrf
             <label for="nik">NIK:</label>
-            <input type="text" name="nik" required>
+            <input type="text" name="nik" value="{{ old('nik') }}" required>
+            @if ($errors->has('nik'))
+                <div style="color: red; font-size: 14px; margin-top: 5px;">
+                    {{ $errors->first('nik') }}
+                </div>
+            @endif
+
 
             <label for="name">Nama:</label>
             <input type="text" name="name" required>
